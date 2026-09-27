@@ -1,0 +1,4 @@
+import {useState} from "react"; import axios from "axios"; import {useNavigate} from "react-router-dom";
+export default function Deposit(){const nav=useNavigate();const user=JSON.parse(localStorage.getItem("user"));const [amount,setAmount]=useState("");
+const submit=async e=>{e.preventDefault();try{const r=await axios.post("http://localhost:5000/api/accounts/deposit",{accountNumber:user.accountNumber,amount:Number(amount)});localStorage.setItem("user",JSON.stringify({...user,balance:r.data.balance}));alert("Money deposited successfully");nav("/dashboard");}catch(e){alert(e.response?.data?.message||"Deposit failed")}};
+return <div className="card"><h2>Deposit Money</h2><form onSubmit={submit}><input type="number" min="1" placeholder="Enter amount" value={amount} onChange={e=>setAmount(e.target.value)} required/><button>Deposit</button></form><button className="secondary" onClick={()=>nav("/dashboard")}>Back</button></div>}
